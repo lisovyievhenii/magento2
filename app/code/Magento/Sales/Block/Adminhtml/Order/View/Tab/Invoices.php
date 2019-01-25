@@ -11,9 +11,13 @@ namespace Magento\Sales\Block\Adminhtml\Order\View\Tab;
  * @api
  * @since 100.0.2
  */
-class Invoices extends \Magento\Framework\View\Element\Text\ListText implements
-    \Magento\Backend\Block\Widget\Tab\TabInterface
+class Invoices extends AbstractTab
 {
+    /**
+     * @var string
+     */
+    protected $resourceId = 'Magento_Sales::invoice';
+
     /**
      * {@inheritdoc}
      */
@@ -28,21 +32,5 @@ class Invoices extends \Magento\Framework\View\Element\Text\ListText implements
     public function getTabTitle()
     {
         return __('Order Invoices');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function canShowTab()
-    {
-        return true;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isHidden()
-    {
-        return false;
     }
 }

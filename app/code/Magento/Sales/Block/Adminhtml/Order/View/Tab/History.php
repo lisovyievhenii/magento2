@@ -28,6 +28,16 @@ class History extends \Magento\Backend\Block\Template implements \Magento\Backen
     protected $_coreRegistry = null;
 
     /**
+     * @var string
+     */
+    protected $resourceId = 'Magento_Sales::comment';
+
+    /**
+     * @var \Magento\Framework\AuthorizationInterface
+     */
+    protected $_authorization;
+
+    /**
      * @var \Magento\Sales\Helper\Admin
      */
     private $adminHelper;
@@ -36,15 +46,18 @@ class History extends \Magento\Backend\Block\Template implements \Magento\Backen
      * @param \Magento\Backend\Block\Template\Context $context
      * @param \Magento\Framework\Registry $registry
      * @param \Magento\Sales\Helper\Admin $adminHelper
+     * @param \Magento\Framework\AuthorizationInterface $authorization
      * @param array $data
      */
     public function __construct(
         \Magento\Backend\Block\Template\Context $context,
         \Magento\Framework\Registry $registry,
         \Magento\Sales\Helper\Admin $adminHelper,
+        \Magento\Framework\AuthorizationInterface $authorization,
         array $data = []
     ) {
         $this->_coreRegistry = $registry;
+        $this->_authorization = $authorization;
         parent::__construct($context, $data);
         $this->adminHelper = $adminHelper;
     }
@@ -269,7 +282,7 @@ class History extends \Magento\Backend\Block\Template implements \Magento\Backen
      */
     public function canShowTab()
     {
-        return true;
+        return $this->_authorization->isAllowed($this->resourceId);
     }
 
     /**
@@ -277,7 +290,7 @@ class History extends \Magento\Backend\Block\Template implements \Magento\Backen
      */
     public function isHidden()
     {
-        return false;
+        return !$this->_authorization->isAllowed($this->resourceId);
     }
 
     /**

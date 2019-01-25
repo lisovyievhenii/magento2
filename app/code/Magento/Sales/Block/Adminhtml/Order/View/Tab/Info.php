@@ -16,6 +16,27 @@ class Info extends \Magento\Sales\Block\Adminhtml\Order\AbstractOrder implements
     \Magento\Backend\Block\Widget\Tab\TabInterface
 {
     /**
+     * @var string
+     */
+    protected $resourceId = 'Magento_Sales::actions_view';
+
+    /**
+     * @var \Magento\Framework\AuthorizationInterface
+     */
+    protected $_authorization;
+
+    public function __construct(
+        \Magento\Backend\Block\Template\Context $context,
+        \Magento\Framework\Registry $registry,
+        \Magento\Sales\Helper\Admin $adminHelper,
+        \Magento\Framework\AuthorizationInterface $authorization,
+        array $data = []
+    ) {
+        $this->_authorization = $authorization;
+        parent::__construct($context, $registry, $adminHelper, $data);
+    }
+
+    /**
      * Retrieve order model instance
      *
      * @return \Magento\Sales\Model\Order
@@ -135,7 +156,7 @@ class Info extends \Magento\Sales\Block\Adminhtml\Order\AbstractOrder implements
      */
     public function canShowTab()
     {
-        return true;
+        return $this->_authorization->isAllowed($this->resourceId);
     }
 
     /**
@@ -143,6 +164,6 @@ class Info extends \Magento\Sales\Block\Adminhtml\Order\AbstractOrder implements
      */
     public function isHidden()
     {
-        return false;
+        return !$this->_authorization->isAllowed($this->resourceId);
     }
 }

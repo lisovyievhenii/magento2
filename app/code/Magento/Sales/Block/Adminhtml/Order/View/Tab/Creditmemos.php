@@ -11,9 +11,13 @@ namespace Magento\Sales\Block\Adminhtml\Order\View\Tab;
  * @api
  * @since 100.0.2
  */
-class Creditmemos extends \Magento\Framework\View\Element\Text\ListText implements
-    \Magento\Backend\Block\Widget\Tab\TabInterface
+class Creditmemos extends AbstractTab
 {
+    /**
+     * @var string
+     */
+    protected $resourceId = 'Magento_Sales::creditmemo';
+
     /**
      * {@inheritdoc}
      */
@@ -28,21 +32,5 @@ class Creditmemos extends \Magento\Framework\View\Element\Text\ListText implemen
     public function getTabTitle()
     {
         return __('Order Credit Memos');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function canShowTab()
-    {
-        return true;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isHidden()
-    {
-        return false;
     }
 }

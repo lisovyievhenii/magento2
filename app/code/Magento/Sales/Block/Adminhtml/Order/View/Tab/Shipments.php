@@ -11,9 +11,13 @@ namespace Magento\Sales\Block\Adminhtml\Order\View\Tab;
  * @api
  * @since 100.0.2
  */
-class Shipments extends \Magento\Framework\View\Element\Text\ListText implements
-    \Magento\Backend\Block\Widget\Tab\TabInterface
+class Shipments extends AbstractTab
 {
+    /**
+     * @var string
+     */
+    protected $resourceId = 'Magento_Sales::ship';
+
     /**
      * Core registry
      *
@@ -26,15 +30,17 @@ class Shipments extends \Magento\Framework\View\Element\Text\ListText implements
      *
      * @param \Magento\Framework\View\Element\Context $context
      * @param \Magento\Framework\Registry $coreRegistry
+     * @param \Magento\Framework\AuthorizationInterface $authorization
      * @param array $data
      */
     public function __construct(
         \Magento\Framework\View\Element\Context $context,
         \Magento\Framework\Registry $coreRegistry,
+        \Magento\Framework\AuthorizationInterface $authorization,
         array $data = []
     ) {
         $this->_coreRegistry = $coreRegistry;
-        parent::__construct($context, $data);
+        parent::__construct($context, $authorization, $data);
     }
 
     /**
@@ -71,14 +77,6 @@ class Shipments extends \Magento\Framework\View\Element\Text\ListText implements
         if ($this->getOrder()->getIsVirtual()) {
             return false;
         }
-        return true;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isHidden()
-    {
-        return false;
+        return parent::canShowTab();
     }
 }

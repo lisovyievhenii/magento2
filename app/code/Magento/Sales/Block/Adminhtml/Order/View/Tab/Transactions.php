@@ -11,13 +11,12 @@ namespace Magento\Sales\Block\Adminhtml\Order\View\Tab;
  * @api
  * @since 100.0.2
  */
-class Transactions extends \Magento\Framework\View\Element\Text\ListText implements
-    \Magento\Backend\Block\Widget\Tab\TabInterface
+class Transactions extends AbstractTab
 {
     /**
-     * @var \Magento\Framework\AuthorizationInterface
+     * @var string
      */
-    protected $_authorization;
+    protected $resourceId = 'Magento_Sales::transactions_fetch';
 
     /**
      * Core registry
@@ -38,9 +37,8 @@ class Transactions extends \Magento\Framework\View\Element\Text\ListText impleme
         \Magento\Framework\Registry $registry,
         array $data = []
     ) {
-        $this->_authorization = $authorization;
         $this->_coreRegistry = $registry;
-        parent::__construct($context, $data);
+        parent::__construct($context, $authorization, $data);
     }
 
     /**
@@ -74,14 +72,6 @@ class Transactions extends \Magento\Framework\View\Element\Text\ListText impleme
      */
     public function canShowTab()
     {
-        return !$this->getOrder()->getPayment()->getMethodInstance()->isOffline();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isHidden()
-    {
-        return !$this->_authorization->isAllowed('Magento_Sales::transactions_fetch');
+        return !$this->getOrder()->getPayment()->getMethodInstance()->isOffline() && parent::canShowTab();
     }
 }

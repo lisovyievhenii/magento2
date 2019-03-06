@@ -1030,12 +1030,8 @@ define([
             _.each(allowedProducts, function (allowedProduct) {
                 optionFinalPrice = parseFloat(optionPrices[allowedProduct].finalPrice.amount);
 
-                if (_.isEmpty(product)) {
+                if (_.isEmpty(product) || optionFinalPrice < optionMinPrice) {
                     optionMinPrice = optionFinalPrice;
-                    product = allowedProduct;
-                }
-
-                if (optionFinalPrice < optionMinPrice) {
                     product = allowedProduct;
                 }
             }, this);
@@ -1089,12 +1085,14 @@ define([
                 mediaCallData.isAjax = true;
                 $widget._XhrKiller();
                 $widget._EnableProductMediaLoader($this);
-                $widget.xhr = $.get(
-                    $widget.options.mediaCallback,
-                    mediaCallData,
-                    mediaSuccessCallback,
-                    'json'
-                ).done(function () {
+                $widget.xhr = $.ajax({
+                    url: $widget.options.mediaCallback,
+                    cache: true,
+                    type: 'GET',
+                    dataType: 'json',
+                    data: mediaCallData,
+                    success: mediaSuccessCallback
+                }).done(function () {
                     $widget._XhrKiller();
                 });
             }
@@ -1252,7 +1250,10 @@ define([
                 }
 
                 imagesToUpdate = this._setImageIndex(imagesToUpdate);
-                gallery.updateData(imagesToUpdate);
+
+                if (!_.isUndefined(gallery)) {
+                    gallery.updateData(imagesToUpdate);
+                }
 
                 if (isInitial) {
                     $(this.options.mediaGallerySelector).AddFotoramaVideoEvents();
